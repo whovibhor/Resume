@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', function () {
         initNavigation();
         console.log('✅ Navigation initialized');
 
+        initFloatingNavigation();
+        console.log('✅ Floating navigation initialized');
+
         initScrollAnimations();
         console.log('✅ Scroll animations initialized');
 
@@ -75,6 +78,89 @@ function initNavigation() {
             }
         });
     });
+}
+
+/* ==========================================
+   FLOATING NAVIGATION FUNCTIONALITY
+   ========================================== */
+function initFloatingNavigation() {
+    const navbar = document.getElementById('navbar');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('section[id], .hero-section');
+    const heroSection = document.querySelector('.hero-section');
+
+    let lastScrollY = 0;
+    let isScrollingDown = false;
+
+    // Handle scroll behavior
+    const handleScroll = () => {
+        const currentScrollY = window.scrollY;
+        isScrollingDown = currentScrollY > lastScrollY;
+
+        // Get hero section height
+        const heroHeight = heroSection ? heroSection.offsetHeight : 800;
+        const scrollThreshold = heroHeight * 0.3; // 30% of hero section
+
+        // Toggle floating state based on scroll position
+        if (currentScrollY > scrollThreshold) {
+            navbar.classList.add('floating');
+
+            // Smart hide/show in floating mode
+            if (isScrollingDown && currentScrollY > scrollThreshold + 200) {
+                navbar.classList.add('hidden');
+            } else if (!isScrollingDown) {
+                navbar.classList.remove('hidden');
+            }
+        } else {
+            navbar.classList.remove('floating', 'hidden');
+        }
+
+        lastScrollY = currentScrollY;
+    };
+
+    // Active section detection
+    const updateActiveSection = () => {
+        let currentSection = 'home'; // Default to home
+        const scrollPosition = window.scrollY + 150; // Increased offset for better detection
+
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+            const sectionId = section.id || 'home';
+
+            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                currentSection = sectionId;
+            }
+        });
+
+        // Update active nav link
+        navLinks.forEach(link => {
+            const targetSection = link.getAttribute('data-section');
+            if (targetSection === currentSection) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+    };
+
+    // Throttled scroll handler for performance
+    let scrollTimeout;
+    const throttledScroll = () => {
+        if (scrollTimeout) return;
+        scrollTimeout = setTimeout(() => {
+            handleScroll();
+            updateActiveSection();
+            scrollTimeout = null;
+        }, 10);
+    };
+
+    // Event listeners
+    window.addEventListener('scroll', throttledScroll);
+
+    // Initial check
+    handleScroll();
+    updateActiveSection();
 }
 
 /* ==========================================
@@ -262,9 +348,14 @@ const projectsData = [
 function loadProjects() {
     const projectsGrid = document.getElementById('projects-grid');
     if (!projectsGrid) {
-        console.warn('Projects grid not found');
+        console.error('❌ Projects grid element not found');
         return;
     }
+
+    console.log('📊 Loading projects...');
+
+    // Clear existing content
+    projectsGrid.innerHTML = '';
 
     projectsData.forEach((project, index) => {
         const projectCard = `
@@ -292,6 +383,8 @@ function loadProjects() {
         `;
         projectsGrid.innerHTML += projectCard;
     });
+
+    console.log(`✅ ${projectsData.length} projects loaded successfully`);
 
     // Initialize project filtering
     initProjectFilters();
@@ -360,9 +453,11 @@ const timelineData = [
 function loadTimeline() {
     const timelineContainer = document.querySelector('.timeline-container');
     if (!timelineContainer) {
-        console.warn('Timeline container not found');
+        console.error('❌ Timeline container element not found');
         return;
     }
+
+    console.log('🗓️ Loading timeline...');
 
     // Add timeline line
     timelineContainer.innerHTML = '<div class="timeline-line"></div>';
@@ -382,6 +477,8 @@ function loadTimeline() {
         `;
         timelineContainer.innerHTML += timelineItem;
     });
+
+    console.log(`✅ ${timelineData.length} timeline items loaded successfully`);
 }
 
 /* ==========================================
