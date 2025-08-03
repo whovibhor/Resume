@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading Test</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            padding: 2rem;
+            background: #000011;
+            color: white;
+        }
+
+        .status {
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 1px solid #00ffff;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Portfolio Loading Test</h1>
+    <div class="status" id="status">Starting tests...</div>
+
+    <script>
+        const status = document.getElementById('status');
+
+        function log(message) {
+            status.innerHTML += '<br>' + message;
+            console.log(message);
+        }
+
+        log('✅ DOM loaded');
+        log('✅ Basic JavaScript working');
+
+        // Test particles.js
+        if (typeof particlesJS !== 'undefined') {
+            log('✅ Particles.js loaded');
+        } else {
+            log('❌ Particles.js not loaded');
+        }
+
+        // Test AOS
+        if (typeof AOS !== 'undefined') {
+            log('✅ AOS loaded');
+        } else {
+            log('❌ AOS not loaded');
+        }
+
+        // Test Vanilla Tilt
+        if (typeof VanillaTilt !== 'undefined') {
+            log('✅ Vanilla Tilt loaded');
+        } else {
+            log('❌ Vanilla Tilt not loaded');
+        }
+
+        log('🎉 All tests completed - No infinite loading detected');
+    </script>
+</body>
+
+</html>

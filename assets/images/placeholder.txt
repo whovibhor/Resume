@@ -1,0 +1,16 @@
+/* Placeholder for profile image */
+/* Add your profile picture as: assets/images/profile.jpg */
+
+/* Placeholder for project images */
+/* Add project screenshots as:
+   - assets/images/project1.jpg
+   - assets/images/project2.jpg
+   - assets/images/project3.jpg
+   - assets/images/project4.jpg
+   - assets/images/project5.jpg
+   - assets/images/project6.jpg
+*/
+
+/* Placeholder for other assets */
+/* Add favicon as: assets/images/favicon.ico */
+/* Add resume as: assets/pdf/resume.pdf */
