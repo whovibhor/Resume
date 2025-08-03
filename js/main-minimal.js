@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', function () {
         initScrollAnimations();
         console.log('✅ Scroll animations initialized');
 
+        initCounterAnimation();
+        console.log('✅ Counter animation initialized');
+
         loadProjects();
         console.log('✅ Projects loaded');
 
@@ -379,4 +382,60 @@ function loadTimeline() {
         `;
         timelineContainer.innerHTML += timelineItem;
     });
+}
+
+/* ==========================================
+   COUNTER ANIMATION FOR STATS
+   ========================================== */
+function initCounterAnimation() {
+    const counters = document.querySelectorAll('.stat-number[data-count]');
+
+    const animateCounters = () => {
+        counters.forEach(counter => {
+            const target = parseInt(counter.getAttribute('data-count'));
+            const startValue = 0;
+            const duration = 2000; // 2 seconds
+            const startTime = Date.now();
+
+            const updateCounter = () => {
+                const currentTime = Date.now();
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // Easing function for smooth animation
+                const easedProgress = 1 - Math.pow(1 - progress, 3);
+                const currentValue = Math.floor(startValue + (target - startValue) * easedProgress);
+
+                // Format the number based on target value
+                if (target >= 10000) {
+                    counter.textContent = (currentValue / 1000).toFixed(0) + 'K+';
+                } else {
+                    counter.textContent = currentValue + '+';
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                }
+            };
+
+            updateCounter();
+        });
+    };
+
+    // Intersection Observer to trigger animation when stats come into view
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateCounters();
+            }
+        });
+    }, {
+        threshold: 0.5
+    });
+
+    // Observe the stats section
+    const statsSection = document.querySelector('.about-stats');
+    if (statsSection) {
+        observer.observe(statsSection);
+    }
 }
